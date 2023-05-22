@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
     container_name: elasticsearch
     restart: always # Will restart if there is any failure
     environment:
@@ -17,12 +17,15 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
+        # For win machines, use the below volume path.
+      # - elasticsearch-data:/usr/share/elasticsearch/data
+        # For macOS, create the below path in your dir, and give propper access.
+        - elasticsearch-data:/Users/johnmartinez/Desktop/docker-volumes/elasticsearch/data
     ports:
       - 9200:9200
   kibana:
     container_name: kibana
-    image: docker.elastic.co/kibana/kibana:7.4.0
+    image: docker.elastic.co/kibana/kibana:8.7.1
     restart: always
     environment:
       - ELASTICSEARCH_HOST=http://elasticsearch:9200
