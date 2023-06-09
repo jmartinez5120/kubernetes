@@ -37,4 +37,4 @@ volumes:
   elasticsearch-data:
     driver: local # Means is going to store the volume local in the PC.
 
-# Running cmd: docker-compose -f elasticsearch-kibana.yml -p ELASTIC_SEARCH up -d
+# Running cmd: docker-compose -f elasticsearch-kibana.yml -p elastic_search up -d
