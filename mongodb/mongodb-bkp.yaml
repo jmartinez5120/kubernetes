@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+spec:
+  replicas: 1  # Initial replica count
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:4.4.6-arm64
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: dev
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: dev
+            - name: MONGO_INITDB_DATABASE
+              value: admin
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+  type: LoadBalancer
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mongodb-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mongodb-deployment
+  minReplicas: 1  # Minimum number of replicas
+  maxReplicas: 5  # Maximum number of replicas
+  targetCPUUtilizationPercentage: 50  # Adjust this value based on your workload
